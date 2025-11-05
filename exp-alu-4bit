@@ -1,0 +1,35 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity alu_4bit is
+    Port (
+        a, b     : in  STD_LOGIC_VECTOR(3 downto 0);
+        opcode   : in  STD_LOGIC_VECTOR(2 downto 0);
+        y        : out STD_LOGIC_VECTOR(4 downto 0)
+    );
+end alu_4bit;
+
+architecture Behavioral of alu_4bit is
+    signal as, bs, ys : STD_LOGIC_VECTOR(4 downto 0);
+begin
+    as <= '0' & a;
+    bs <= '0' & b;
+
+    process(as, bs, opcode)
+    begin
+        case opcode is
+            when "000" => ys <= as + bs;
+            when "001" => ys <= as - bs;
+            when "010" => ys <= as and bs;
+            when "011" => ys <= not (as and bs); -- NAND
+            when "100" => ys <= as xor bs;
+            when "101" => ys <= not (as xor bs); -- XNOR
+            when "110" => ys <= as or bs;
+            when others => ys <= '0' & as(3 downto 0);
+        end case;
+    end process;
+
+    y <= ys;
+end Behavioral;
